@@ -1,9 +1,6 @@
 package com.hyejis.booksearchapp.ui.viewmodel
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.hyejis.booksearchapp.data.model.SearchResponse
 import com.hyejis.booksearchapp.data.repository.BookSearchRepository
 import kotlinx.coroutines.Dispatchers
@@ -11,7 +8,8 @@ import kotlinx.coroutines.launch
 import retrofit2.Response
 
 class BookSearchViewModel(
-    private val bookSearchRepository: BookSearchRepository
+    private val bookSearchRepository: BookSearchRepository,
+    private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
     private val _searchResult = MutableLiveData<SearchResponse>()
@@ -25,5 +23,20 @@ class BookSearchViewModel(
                 _searchResult.postValue(body)
             }
         }
+    }
+
+    //SavedState - 재시작 시 데이터 유지
+    var query = String()
+        set(value) {
+            field = value
+            savedStateHandle.set(SAVE_STATE_KEY, value)
+        }
+
+    init {
+        query = savedStateHandle.get<String>(SAVE_STATE_KEY) ?: ""
+    }
+
+    companion object {
+        private const val SAVE_STATE_KEY = "query"
     }
 }
