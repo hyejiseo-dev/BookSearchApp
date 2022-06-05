@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.ListAdapter
 import com.hyejis.booksearchapp.data.model.Book
 import com.hyejis.booksearchapp.databinding.ItemBookPreviewBinding
 
+//DiffUtil 콜백 객체를 상속 - 리스트 갱신 자동화
 class BookSearchAdapter : ListAdapter<Book, BookSearchViewHolder>(BookDiffCallBack) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BookSearchViewHolder {
