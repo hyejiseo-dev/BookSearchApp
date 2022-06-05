@@ -1,8 +1,11 @@
 package com.hyejis.booksearchapp.data.model
 
+import android.os.Parcelable
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
+import kotlinx.android.parcel.Parcelize
 
+@Parcelize   //safeargs를 위한 설정
 @JsonClass(generateAdapter = true)
 data class Book(
     val authors: List<String>,
@@ -18,4 +21,4 @@ data class Book(
     val title: String,
     val translators: List<String>,
     val url: String
-)
+) : Parcelable

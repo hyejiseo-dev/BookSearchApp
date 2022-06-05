@@ -7,6 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
+import androidx.navigation.NavDirections
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.hyejis.booksearchapp.databinding.FragmentSearchBinding
@@ -52,6 +54,12 @@ class SearchFragment : Fragment() {
                 DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL)
             )
             adapter = bookSearchAdapter
+        }
+
+        bookSearchAdapter.setOnClickListener {
+            val action: NavDirections =
+                SearchFragmentDirections.actionSearchFragmentToBookFragment(it)
+            findNavController().navigate(action)
         }
     }
 
