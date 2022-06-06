@@ -1,6 +1,7 @@
 package com.hyejis.booksearchapp.ui.viewmodel
 
 import androidx.lifecycle.*
+import com.hyejis.booksearchapp.data.model.Book
 import com.hyejis.booksearchapp.data.model.SearchResponse
 import com.hyejis.booksearchapp.data.repository.BookSearchRepository
 import kotlinx.coroutines.Dispatchers
@@ -24,6 +25,18 @@ class BookSearchViewModel(
             }
         }
     }
+
+    //Room
+    //viewModelScope -> suspend 함수 사용하는 곳
+    fun saveBook(book: Book) = viewModelScope.launch(Dispatchers.IO) {
+        bookSearchRepository.insertBooks(book)
+    }
+
+    fun deleteBook(book: Book) = viewModelScope.launch(Dispatchers.IO) {
+        bookSearchRepository.deleteBooks(book)
+    }
+
+    val favoriteBooks: LiveData<List<Book>> = bookSearchRepository.getFavoriteBooks()
 
     //SavedState - 재시작 시 데이터 유지
     var query = String()
