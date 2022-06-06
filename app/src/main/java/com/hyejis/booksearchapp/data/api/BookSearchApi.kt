@@ -7,8 +7,11 @@ import retrofit2.http.GET
 import retrofit2.http.Headers
 import retrofit2.http.Query
 
+/**
+ * 카카오 책 검색 API
+ * https://developers.kakao.com/docs/latest/ko/daum-search/dev-guide#search-book
+ * **/
 interface BookSearchApi {
-
     @Headers("Authorization: KakaoAK $API_KEY")
     @GET("v3/search/book")
     suspend fun searchBooks(

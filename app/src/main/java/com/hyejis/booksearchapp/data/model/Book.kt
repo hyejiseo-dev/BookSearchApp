@@ -8,11 +8,12 @@ import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 import kotlinx.android.parcel.Parcelize
 
+//kotlin data class from JSON 플러그인 사용
 @Parcelize   //safeargs를 위한 설정
 @JsonClass(generateAdapter = true)
 @Entity(tableName = "books")
 data class Book(
-    val authors: List<String>,  //컨버터 사용
+    val authors: List<String>,  //컨버터 사용 (OrmConverter)
     val contents: String,
     val datetime: String,
     @PrimaryKey(autoGenerate = false) //고유키 지정

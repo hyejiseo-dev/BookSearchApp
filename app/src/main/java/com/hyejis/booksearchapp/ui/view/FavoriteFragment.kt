@@ -15,6 +15,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.hyejis.booksearchapp.databinding.FragmentFavoriteBinding
 import com.hyejis.booksearchapp.ui.adapter.BookSearchAdapter
 import com.hyejis.booksearchapp.ui.viewmodel.BookSearchViewModel
+import com.hyejis.booksearchapp.util.collectLatestStateFlow
 
 class FavoriteFragment : Fragment() {
 
@@ -40,7 +41,27 @@ class FavoriteFragment : Fragment() {
 
         setupRecyclerView()
         setupTouchHelper(view)
-        bookSearchViewModel.favoriteBooks.observe(viewLifecycleOwner) {
+//        bookSearchViewModel.favoriteBooks.observe(viewLifecycleOwner) {
+//            bookSearchAdapter.submitList(it)
+//        }
+
+        // livedata > flow로 변환
+//        lifecycleScope.launch {
+//            bookSearchViewModel.favoriteBooks.collectLatest {
+//                bookSearchAdapter.submitList(it)
+//            }
+//        }
+        //Stateflow 구독하기
+//        viewLifecycleOwner.lifecycleScope.launch {
+//            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+//                bookSearchViewModel.favoriteBooks.collectLatest {
+//                    bookSearchAdapter.submitList(it)
+//                }
+//            }
+//        }
+
+        //확장함수 적용 - extensions
+        collectLatestStateFlow(bookSearchViewModel.favoriteBooks) {
             bookSearchAdapter.submitList(it)
         }
     }

@@ -5,6 +5,9 @@ import com.hyejis.booksearchapp.data.model.Book
 import com.hyejis.booksearchapp.data.model.SearchResponse
 import com.hyejis.booksearchapp.data.repository.BookSearchRepository
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import retrofit2.Response
 
@@ -36,7 +39,10 @@ class BookSearchViewModel(
         bookSearchRepository.deleteBooks(book)
     }
 
-    val favoriteBooks: LiveData<List<Book>> = bookSearchRepository.getFavoriteBooks()
+    //val favoriteBooks: Flow<List<Book>> = bookSearchRepository.getFavoriteBooks()
+    //StateFlow Type 변경
+    val favoriteBooks: StateFlow<List<Book>> = bookSearchRepository.getFavoriteBooks()
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), listOf())
 
     //SavedState - 재시작 시 데이터 유지
     var query = String()
