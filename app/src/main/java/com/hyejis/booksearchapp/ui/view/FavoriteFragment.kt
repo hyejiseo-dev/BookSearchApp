@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import com.hyejis.booksearchapp.databinding.FragmentFavoriteBinding
-import com.hyejis.booksearchapp.ui.adapter.BookSearchAdapter
+import com.hyejis.booksearchapp.ui.adapter.BookSearchPagingAdapter
 import com.hyejis.booksearchapp.ui.viewmodel.BookSearchViewModel
 import com.hyejis.booksearchapp.util.collectLatestStateFlow
 
@@ -24,7 +24,9 @@ class FavoriteFragment : Fragment() {
 
     private lateinit var bookSearchViewModel: BookSearchViewModel
 
-    private lateinit var bookSearchAdapter: BookSearchAdapter
+    //  private lateinit var bookSearchAdapter: BookSearchAdapter
+
+    private lateinit var bookSearchAdapter: BookSearchPagingAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -61,14 +63,20 @@ class FavoriteFragment : Fragment() {
 //        }
 
         //확장함수 적용 - extensions
-        collectLatestStateFlow(bookSearchViewModel.favoriteBooks) {
-            bookSearchAdapter.submitList(it)
+//        collectLatestStateFlow(bookSearchViewModel.favoriteBooks) {
+//            bookSearchAdapter.submitList(it)
+//        }
+
+        //기존에 페이징 값을 취소하고 새로 구독하도록 latest로 사용
+        collectLatestStateFlow(bookSearchViewModel.favoritePagingBooks) {
+            bookSearchAdapter.submitData(it)
         }
     }
 
 
     private fun setupRecyclerView() {
-        bookSearchAdapter = BookSearchAdapter()
+        //       bookSearchAdapter = BookSearchAdapter()
+        bookSearchAdapter = BookSearchPagingAdapter()
         binding.rvFavoriteBooks.apply {
             setHasFixedSize(true)
             layoutManager =
@@ -105,13 +113,23 @@ class FavoriteFragment : Fragment() {
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val position = viewHolder.bindingAdapterPosition
-                val book = bookSearchAdapter.currentList[position]
-                bookSearchViewModel.deleteBook(book)  //삭제 동작
-                Snackbar.make(view, "Book has deleted", Snackbar.LENGTH_SHORT).apply {
-                    setAction("Undo") {
-                        bookSearchViewModel.saveBook(book)  //Undo 누르면 다시 아이템을 저장할 수 있도록
-                    }
-                }.show()
+//                val book = bookSearchAdapter.currentList[position]
+//                bookSearchViewModel.deleteBook(book)  //삭제 동작
+//                Snackbar.make(view, "Book has deleted", Snackbar.LENGTH_SHORT).apply {
+//                    setAction("Undo") {
+//                        bookSearchViewModel.saveBook(book)  //Undo 누르면 다시 아이템을 저장할 수 있도록
+//                    }
+//                }.show()
+
+                val pagedBook = bookSearchAdapter.peek(position)  //null 처리!
+                pagedBook?.let {
+                    bookSearchViewModel.deleteBook(pagedBook)
+                    Snackbar.make(view, "Book has deleted", Snackbar.LENGTH_SHORT).apply {
+                        setAction("Undo") {
+                            bookSearchViewModel.saveBook(pagedBook)  //Undo 누르면 다시 아이템을 저장할 수 있도록
+                        }
+                    }.show()
+                }
             }
         }
 

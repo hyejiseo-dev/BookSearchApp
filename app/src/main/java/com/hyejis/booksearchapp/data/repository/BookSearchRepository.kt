@@ -1,5 +1,6 @@
 package com.hyejis.booksearchapp.data.repository
 
+import androidx.paging.PagingData
 import com.hyejis.booksearchapp.data.model.Book
 import com.hyejis.booksearchapp.data.model.SearchResponse
 import kotlinx.coroutines.flow.Flow
@@ -19,4 +20,12 @@ interface BookSearchRepository {
     suspend fun deleteBooks(book: Book)
 
     fun getFavoriteBooks(): Flow<List<Book>>
+
+    //Datastore
+    suspend fun saveSortMode(mode: String)
+
+    suspend fun getSortMode(): Flow<String>
+
+    //Paging
+    fun getFavoritePagingBooks(): Flow<PagingData<Book>>
 }
